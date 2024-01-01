@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ali's Discord Client Downloads</title>
+    <style>
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 9600px; /* or your preferred max width */
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+        h1 {
+            color: #333;
+        }
+
+        .release {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* This will vertically center the items in the flex container */
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+
+        .release-info,
+        .release-description {
+            width: 48%;
+            overflow-wrap: break-word;
+        }
+
+        .release:hover {
+            background-color: #f0f0f0;
+        }
+
+        .download-link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .download-link:hover {
+            background-color: #0056b3;
+        }
+
+        .release-description {
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .markdown-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <h1>Download Ali's Discord Client</h1>
+            <div id="releases"></div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        async function fetchReleases() {
+            const url = "https://api.github.com/repos/ali-kingX/Ali-s-Discord-Client/releases";
+            const response = await fetch(url);
+            const releases = await response.json();
+
+            const releasesContainer = document.getElementById("releases");
+            releases.forEach(release => {
+                const releaseDiv = document.createElement("div");
+                releaseDiv.className = "release";
+
+                const infoDiv = document.createElement("div");
+                infoDiv.className = "release-info";
+                releaseDiv.appendChild(infoDiv);
+
+                const releaseName = document.createElement("h2");
+                releaseName.textContent = release.name;
+                infoDiv.appendChild(releaseName);
+
+                release.assets.forEach(asset => {
+                    if (asset.name.startsWith("Ali")) {
+                        const link = document.createElement("a");
+                        link.href = asset.browser_download_url;
+                        link.className = "download-link";
+                        link.textContent = "Download " + asset.name;
+                        infoDiv.appendChild(link);
+                    }
+                });
+
+                const descriptionDiv = document.createElement("div");
+                descriptionDiv.className = "release-description";
+                descriptionDiv.innerHTML = markdownToHTML(release.body);
+                releaseDiv.appendChild(descriptionDiv);
+
+                releasesContainer.appendChild(releaseDiv);
+            });
+        }
+
+        function markdownToHTML(markdown) {
+            // Replace markdown headers with <span> tags with a class for styling
+            return markdown
+                .replace(/^# (.*$)/gim, '<span class="markdown-header">$1</span>')
+                .replace(/\n/g, '<br>'); // Replace line breaks with <br> tags
+        }
+
+        fetchReleases();
+    </script>
+</body>
+
+</html>
